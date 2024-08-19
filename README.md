@@ -29,16 +29,19 @@ In the `src` directory, there are the following files:
  - `alternate_fw.py`: The proposed algorithm for the NSW and SW maximization via the alternate Frank-Wolfe method.
 
 ## Example Usage
+```
+cd src
+```
 ```python
-from src.market import Market
-from src.alternate_fw import nsw_maximize
+from market import Market
+from alternate_fw import nsw_maximize
 
 # Make a market with 30 left agents and 20 right agents, and generate preferences
 mkt = Market(num_left=30, num_right=20)
 mkt.generate_preferences(pref_seed=0)
 
 # Run the NSW maximization algorithm
-policy_for_left, policy_for_right = nsw_maximize(m.pref_left_to_right, m.pref_right_to_left, v_left=m.v_left, v_right=m.v_right)
+policy_for_left, policy_for_right = nsw_maximize(mkt.pref_left_to_right, mkt.pref_right_to_left, mkt.v_left, mkt.v_right)
 
 # Compute the matching probabilities and check the envy-freeness
 match_prob = mkt.get_match_prob(policy_for_left, policy_for_right)
