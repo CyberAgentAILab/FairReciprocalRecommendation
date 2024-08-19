@@ -10,7 +10,7 @@ rye sync
 ```
 
 If you need to set up the Python environment manually, we require the followings:
-- Python >= 3.8
+- Python >= 3.9
 - numpy >= 2.0.1
 - cvxpy >= 1.5.2
 - jupyter >= 1.0.0
@@ -18,7 +18,7 @@ If you need to set up the Python environment manually, we require the followings
 
 ## Files
 
-In the `src` directory, there are the following files:
+In the [`src`](https://github.com/CyberAgentAILab/FairReciprocalRecommendation/tree/main/src) directory, there are the following files:
 
  - `market.py`: The class definition of the matching markets, including the synthetic preference data generation and the checking function of the envy-freeness.
  - `utils.py`: The utility functions.
@@ -50,7 +50,7 @@ envy = mkt.check_envy(policy_for_left, policy_for_right, match_prob=match_prob)
 print("Number of envies for left agents:", len(envy["left"]))
 print("Number of envies for right agents:", len(envy["right"]))
 ```
-See `notebooks/example.ipynb` for more detailed examples.
+See [`notebooks/example.ipynb`](https://github.com/CyberAgentAILab/FairReciprocalRecommendation/blob/main/notebooks/example.ipynb) for more detailed examples.
 
 ## License
 This repository is licensed under the MIT License.
