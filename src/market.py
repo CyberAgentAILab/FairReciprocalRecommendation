@@ -251,3 +251,18 @@ class Market:
                     envy["right"].append((i, j))    # i-th right agent envies j-th right agent
 
         return envy
+
+
+    def __gini(self, x: np.ndarray) -> float:
+        """Compute the Gini index for the given array"""
+        n = len(x)
+        ans = 0
+        for i in range(n):
+            for j in range(n):
+                ans += np.abs(x[i] - x[j])
+        return ans / (2 * n * x.sum())
+    
+
+    def compute_gini(self, match_prob: np.ndarray) -> tuple[float, float]:
+        """Compute the Gini indices of the given match probabilities for both sides of users """
+        return self.__gini(match_prob.sum(axis=1)), self.__gini(match_prob.sum(axis=0))
