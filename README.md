@@ -63,7 +63,7 @@ For more detailed examples, see:
  - [`notebooks/example.ipynb`](https://github.com/CyberAgentAILab/FairReciprocalRecommendation/blob/main/notebooks/example.ipynb) for basic usages of the proposed algorithms.
  - [`notebooks/experiments.ipynb`](https://github.com/CyberAgentAILab/FairReciprocalRecommendation/blob/main/notebooks/experiments.ipynb) for the synthetic data experiments.
 
-## Citation
+## Citations
 - Yoji Tomita and Tomohiko Yokoyama. 2024. "[Fair Reciprocal Recommendation in Matching Markets.](https://dl.acm.org/doi/10.1145/3640457.3688130)" Proceedings of the 18th ACM Conference on Recommender Systems (RecSys'24).
   ```
   @inproceedings{tomita2024fair,
@@ -72,6 +72,14 @@ For more detailed examples, see:
     booktitle={Proceedings of the 18th ACM Conference on Recommender Systems},
     pages={209--218},
     year={2024}
+  }
+  ```
+- Yoji Tomita and Tomohiko Yokoyama. 2025. "Balancing Fairness and High Match Rates in Reciprocal Recommender Systems: A Nash Social Welfare Approach." Working Paper.
+  ```
+  @unpublished{tomita2025balancing,
+    title={Balancing Fairness and High Match Rates in Reciprocal Recommender Systems: A Nash Social Welfare Approach},
+    author={Tomita, Yoji and Yokoyama, Tomohiko},
+    year={2025}
   }
   ```
 
