@@ -8,17 +8,17 @@ from tu_matching import tu_matching
 from alternate_fw import sw_maximize, nsw_maximize, alpha_sw_maximize
 from alternate_fw_sinkhorn import sw_sinkhorn, nsw_sinkhorn
 
+
 def experiment1(
-        result_dir: str = ".",
-        num_left: int = 10,
-        num_right: int = 10,
-        v_type: str = 'log',
-        lambda_value: float = 0.8,
-        testcases: int = 10,
-        solver: str = "CLARABEL"
+    result_dir: str = ".",
+    num_left: int = 10,
+    num_right: int = 10,
+    v_type: str = "log",
+    lambda_value: float = 0.8,
+    testcases: int = 10,
+    solver: str = "CLARABEL",
 ) -> None:
-    """
-    Conducts experiments in the setting of "5.1 Synthetic Data" in Tomita and Yokoyama [1], and "8.2 Synthetic Data Experiment I" in Tomita and Yokoyama (2025).
+    """Conduct experiments in the setting of "5.1 Synthetic Data" in Tomita and Yokoyama [1], and "8.2 Synthetic Data Experiment I" in Tomita and Yokoyama (2025).
 
     Parameters
     ----------
@@ -36,6 +36,7 @@ def experiment1(
         The number of test cases to run.
     solver : str
         The CVXPY solver used in the IterLP, SW and NSW methods. "CLARABEL", "ECOS" or etc.
+
     """
     result = []
     for seed in range(testcases):
@@ -61,8 +62,8 @@ def experiment1(
                 left_rec, right_rec = nsw_maximize(m.pref_left_to_right, m.pref_right_to_left, m.v_left, m.v_right, solver=solver, output=False)
             else:
                 raise ValueError("Invalid Method")
-            execution_time = time.time()-start_time
-            
+            execution_time = time.time() - start_time
+
             match_prob = m.get_match_prob(left_rec, right_rec)
             envy = m.check_envy(left_rec, right_rec, match_prob)
             gini = m.compute_gini(match_prob)
@@ -75,32 +76,33 @@ def experiment1(
                     "Seed": seed,
                     "Method": method,
                     "Match": match_prob.sum(),
-                    "LeftEnvy": len(envy['left']),
-                    "RightEnvy": len(envy['right']),
+                    "LeftEnvy": len(envy["left"]),
+                    "RightEnvy": len(envy["right"]),
                     "LeftGini": gini[0],
                     "RightGini": gini[1],
-                    "ExecutionTime": execution_time
-                }
+                    "ExecutionTime": execution_time,
+                },
             )
-            print(f"{method}: Match={result[-1]['Match']}, LeftEnvy={result[-1]['LeftEnvy']}, RightEnvy={result[-1]['RightEnvy']}, LeftGini={result[-1]['LeftGini']}, RightGini={result[-1]['RightGini']}, ExecutionTime={result[-1]['ExecutionTime']}")
+            print(
+                f"{method}: Match={result[-1]['Match']}, LeftEnvy={result[-1]['LeftEnvy']}, RightEnvy={result[-1]['RightEnvy']}, LeftGini={result[-1]['LeftGini']}, RightGini={result[-1]['RightGini']}, ExecutionTime={result[-1]['ExecutionTime']}",
+            )
 
-    result_file_path = f'{result_dir}/experiment1_n{num_left}_m{num_right}_v{v_type}_lambda{lambda_value}_testcases{testcases}.json'
+    result_file_path = f"{result_dir}/experiment1_n{num_left}_m{num_right}_v{v_type}_lambda{lambda_value}_testcases{testcases}.json"
 
     with open(result_file_path, "w") as f:
         json.dump(result, f, indent=4)
 
 
 def experiment2(
-        result_dir: str = ".",
-        num_left: int = 10,
-        num_right: int = 10,
-        v_type: str = 'log',
-        lambda_value: float = 0.8,
-        testcases: int = 10,
-        solver: str = "CLARABEL"
+    result_dir: str = ".",
+    num_left: int = 10,
+    num_right: int = 10,
+    v_type: str = "log",
+    lambda_value: float = 0.8,
+    testcases: int = 10,
+    solver: str = "CLARABEL",
 ) -> None:
-    """
-    Conducts experiments in the setting of "8.3 Synthetic Data Experiment II" in Tomita and Yokoyama (2025).
+    """Conduct experiments in the setting of "8.3 Synthetic Data Experiment II" in Tomita and Yokoyama (2025).
 
     Parameters
     ----------
@@ -118,6 +120,7 @@ def experiment2(
         The number of test cases to run.
     solver: str
         The CVXPY solver used in the alpha-SW methods. "CLARABEL", "ECOS" or etc.
+
     """
     result = []
     for seed in range(testcases):
@@ -128,7 +131,7 @@ def experiment2(
         for alpha in [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]:
             start_time = time.time()
             left_rec, right_rec = alpha_sw_maximize(m.pref_left_to_right, m.pref_right_to_left, v_left=m.v_left, v_right=m.v_right, solver=solver, output=False, alpha=alpha)
-            execution_time = time.time()-start_time
+            execution_time = time.time() - start_time
 
             match_prob = m.get_match_prob(left_rec, right_rec)
             envy = m.check_envy(left_rec, right_rec, match_prob)
@@ -142,34 +145,35 @@ def experiment2(
                     "Seed": seed,
                     "Alpha": alpha,
                     "Match": match_prob.sum(),
-                    "LeftEnvy": len(envy['left']),
-                    "RightEnvy": len(envy['right']),
+                    "LeftEnvy": len(envy["left"]),
+                    "RightEnvy": len(envy["right"]),
                     "LeftGini": gini[0],
                     "RightGini": gini[1],
-                    "ExecutionTime": execution_time
-                }
+                    "ExecutionTime": execution_time,
+                },
             )
-            print(f"Alpha={alpha}: Match={result[-1]['Match']}, LeftEnvy={result[-1]['LeftEnvy']}, RightEnvy={result[-1]['RightEnvy']}, LeftGini={result[-1]['LeftGini']}, RightGini={result[-1]['RightGini']}, ExecutionTime={result[-1]['ExecutionTime']}")
+            print(
+                f"Alpha={alpha}: Match={result[-1]['Match']}, LeftEnvy={result[-1]['LeftEnvy']}, RightEnvy={result[-1]['RightEnvy']}, LeftGini={result[-1]['LeftGini']}, RightGini={result[-1]['RightGini']}, ExecutionTime={result[-1]['ExecutionTime']}",
+            )
 
-    result_file_path = f'{result_dir}/experiment2_n{num_left}_m{num_right}_v{v_type}_lambda{lambda_value}_testcases{testcases}.json'
+    result_file_path = f"{result_dir}/experiment2_n{num_left}_m{num_right}_v{v_type}_lambda{lambda_value}_testcases{testcases}.json"
 
     with open(result_file_path, "w") as f:
         json.dump(result, f, indent=4)
 
 
 def experiment3(
-        result_dir: str = ".",
-        num_left: int = 10,
-        num_right: int = 10,
-        v_type: str = 'log',
-        lambda_value: float = 0.8,
-        testcases: int = 10,
-        solver: str = "CLARABEL",
-        device: str = "cpu",
-        sinkhorn_lambda: float = 200.0
+    result_dir: str = ".",
+    num_left: int = 10,
+    num_right: int = 10,
+    v_type: str = "log",
+    lambda_value: float = 0.8,
+    testcases: int = 10,
+    solver: str = "CLARABEL",
+    device: str = "cpu",
+    sinkhorn_lambda: float = 200.0,
 ) -> None:
-    """
-    Conducts experiments in the setting of "8.4 Synthetic Data Experiment III" in Tomita and Yokoyama (2025).
+    """Conducts experiments in the setting of "8.4 Synthetic Data Experiment III" in Tomita and Yokoyama (2025).
 
     Parameters
     ----------
@@ -191,6 +195,7 @@ def experiment3(
         The device for the SW_Sinkhorn and NSW_Sinkhorn methods. "cpu", "cuda" or etc.
     sinkhorn_lambda: float
         Hyper parameter in the Sinkhorn algorithm used in the SW_Sinkhorn and NSW_Sinkhorn methods.
+
     """
     result = []
     for seed in range(testcases):
@@ -220,8 +225,8 @@ def experiment3(
                 left_rec, right_rec = nsw_sinkhorn(m.pref_left_to_right, m.pref_right_to_left, m.v_left, m.v_right, device=device, sinkhorn_lambda=sinkhorn_lambda, output=False)
             else:
                 raise ValueError("Invalid Method")
-            execution_time = time.time()-start_time
-            
+            execution_time = time.time() - start_time
+
             match_prob = m.get_match_prob(left_rec, right_rec)
             envy = m.check_envy(left_rec, right_rec, match_prob)
             gini = m.compute_gini(match_prob)
@@ -234,16 +239,18 @@ def experiment3(
                     "Seed": seed,
                     "Method": method,
                     "Match": match_prob.sum(),
-                    "LeftEnvy": len(envy['left']),
-                    "RightEnvy": len(envy['right']),
+                    "LeftEnvy": len(envy["left"]),
+                    "RightEnvy": len(envy["right"]),
                     "LeftGini": gini[0],
                     "RightGini": gini[1],
-                    "ExecutionTime": execution_time
-                }
+                    "ExecutionTime": execution_time,
+                },
             )
-            print(f"{method}: Match={result[-1]['Match']}, LeftEnvy={result[-1]['LeftEnvy']}, RightEnvy={result[-1]['RightEnvy']}, LeftGini={result[-1]['LeftGini']}, RightGini={result[-1]['RightGini']}, ExecutionTime={result[-1]['ExecutionTime']}")
+            print(
+                f"{method}: Match={result[-1]['Match']}, LeftEnvy={result[-1]['LeftEnvy']}, RightEnvy={result[-1]['RightEnvy']}, LeftGini={result[-1]['LeftGini']}, RightGini={result[-1]['RightGini']}, ExecutionTime={result[-1]['ExecutionTime']}",
+            )
 
-    result_file_path = f'{result_dir}/experiment3_n{num_left}_m{num_right}_v{v_type}_lambda{lambda_value}_testcases{testcases}.json'
+    result_file_path = f"{result_dir}/experiment3_n{num_left}_m{num_right}_v{v_type}_lambda{lambda_value}_testcases{testcases}.json"
 
     with open(result_file_path, "w") as f:
         json.dump(result, f, indent=4)

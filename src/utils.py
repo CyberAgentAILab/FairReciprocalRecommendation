@@ -4,6 +4,7 @@ import numpy as np
 
 class NumpyEncoder(json.JSONEncoder):
     """Encode numpy types to json."""
+
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
@@ -16,32 +17,34 @@ class NumpyEncoder(json.JSONEncoder):
 
 def to_deterministic_policy(array: np.ndarray) -> np.ndarray:
     """Convert 2d score array to deterministic policy.
-    
+
     Parameters
     ----------
     array : np.ndarray
         2d score array.
-    
+
     Returns
     -------
     np.ndarray
         Deterministic policy.
+
     """
     return np.argsort(-array, axis=1)
 
 
 def to_stochastic_policy(array: np.ndarray) -> np.ndarray:
     """Convert deterministic policy to stochastic policy.
-    
+
     Parameters
     ----------
     array : np.ndarray
         Deterministic policy.
-    
+
     Returns
     -------
     np.ndarray
         Stochastic policy.
+
     """
     return np.array([np.eye(arr1d.size)[arr1d].T for arr1d in array])
 
@@ -60,6 +63,7 @@ def generate_examination_vector(v_type: str, num_rank: int) -> np.ndarray:
     -------
     np.ndarray
         Examination vector.
+
     """
     if v_type == "inv":
         return 1 / np.arange(1, num_rank + 1)
@@ -68,7 +72,7 @@ def generate_examination_vector(v_type: str, num_rank: int) -> np.ndarray:
     elif v_type == "exp":
         return 1 / np.exp(np.arange(num_rank))
     elif v_type == "k_1":
-        return np.array([1.0]+[0.0]*(num_rank-1))
+        return np.array([1.0] + [0.0] * (num_rank - 1))
     elif v_type == "uni":
         return np.array([1.0] * num_rank)
     elif v_type == "lin":

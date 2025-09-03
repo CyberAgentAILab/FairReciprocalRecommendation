@@ -2,8 +2,9 @@ import numpy as np
 import cvxpy as cp
 from utils import to_deterministic_policy, to_stochastic_policy
 
-def iter_lp(pref_left_to_right: np.ndarray, pref_right_to_left: np.ndarray, solver: str = "CLARABEL") -> tuple[np.ndarray]:
-    """Returns stochastic policy for left and right computed via iterative LP.
+
+def iter_lp(pref_left_to_right: np.ndarray, pref_right_to_left: np.ndarray, solver: str = "CLARABEL") -> tuple[np.ndarray, np.ndarray]:
+    """Return stochastic policy for left and right computed via iterative LP.
 
     Parameters
     ----------
@@ -13,11 +14,12 @@ def iter_lp(pref_left_to_right: np.ndarray, pref_right_to_left: np.ndarray, solv
         The preference of right to left. Shape is (num_right, num_left).
     solver : str, optional
         Solver for CVXPY, like "CLARABEL", "ECOS", etc. by default "CLARABEL".
-    
+
     Returns
     -------
-    tuple[np.ndarray]
+    tuple[np.ndarray, np.ndarray]
         The stochastic policy for left and right. Shapes are (num_left, num_right, num_right) and (num_right, num_left, num_left).
+
     """
     assert pref_left_to_right.shape == pref_right_to_left.T.shape
     coeff_matrix = pref_left_to_right * pref_right_to_left.T
@@ -25,21 +27,24 @@ def iter_lp(pref_left_to_right: np.ndarray, pref_right_to_left: np.ndarray, solv
 
 
 def __iter_lp(coeff_matrix: np.ndarray, solver: str) -> np.ndarray:
-    """Returns stochastic policy computed via iterative LP for one side.
+    """Return stochastic policy computed via iterative LP for one side.
 
     Parameters
     ----------
     coeff_matrix : np.ndarray
         Coefficient matrix for LP.
-    
+    solver: str
+        Solver for CVXPY, like "CLARABEL", "ECOS", etc.
+
     Returns
     -------
     np.ndarray
         Stochastic policy for one side.
+
     """
     num_left, num_right = coeff_matrix.shape
     x = cp.Variable(shape=(num_left, num_right))
-    constraints = [0 <= x, x @ np.ones(num_right) <= np.ones(num_left), x.T @ np.ones(num_left) <= np.ones(num_right)]
+    constraints = [x >= 0, x @ np.ones(num_right) <= np.ones(num_left), x.T @ np.ones(num_left) <= np.ones(num_right)]
     A = coeff_matrix.copy()
     res = np.zeros(shape=(num_left, num_right))
 
@@ -50,5 +55,5 @@ def __iter_lp(coeff_matrix: np.ndarray, solver: str) -> np.ndarray:
         for m in range(num_left):
             res[m, argmax[m]] = num_right - t
             A[m, argmax[m]] = -100000
-    
+
     return to_stochastic_policy(to_deterministic_policy(res))
