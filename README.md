@@ -1,7 +1,7 @@
 # Fair Reciprocal Recommendation in Matching Markets
 
 This repository contains the algorithms and synthetic data generation codes used in the experimental sections of the following papers:
-- [1] Yoji Tomita and Tomohiko Yokoyama. 2024. "Fair Reciprocal Recommendation in Matching Markets." Proceedings of the 18th ACM Conference on Recommender Systems (RecSys'24).
+- [1] Yoji Tomita and Tomohiko Yokoyama. 2024. "[Fair Reciprocal Recommendation in Matching Markets.](https://dl.acm.org/doi/10.1145/3640457.3688130)" Proceedings of the 18th ACM Conference on Recommender Systems (RecSys'24).
 - [2] Yoji Tomita and Tomohiko Yokoyama. 2025. "Balancing Fairness and High Match Rates in Reciprocal Recommender Systems: A Nash Social Welfare Approach." Working Paper.
 
 ## Requirements
@@ -17,7 +17,6 @@ If you need to set up the Python environment manually, we require the followings
 - cvxpy >= 1.5.2
 - jupyter >= 1.0.0
 - torch >= 2.8.0
-
 
 ## Files
 
@@ -63,6 +62,18 @@ print("Number of envies for right agents:", len(envy["right"]))
 For more detailed examples, see:
  - [`notebooks/example.ipynb`](https://github.com/CyberAgentAILab/FairReciprocalRecommendation/blob/main/notebooks/example.ipynb) for basic usages of the proposed algorithms.
  - [`notebooks/experiments.ipynb`](https://github.com/CyberAgentAILab/FairReciprocalRecommendation/blob/main/notebooks/experiments.ipynb) for the synthetic data experiments.
+
+## Citation
+- Yoji Tomita and Tomohiko Yokoyama. 2024. "[Fair Reciprocal Recommendation in Matching Markets.](https://dl.acm.org/doi/10.1145/3640457.3688130)" Proceedings of the 18th ACM Conference on Recommender Systems (RecSys'24).
+  ```
+  @inproceedings{tomita2024fair,
+    title={Fair Reciprocal Recommendation in Matching Markets},
+    author={Tomita, Yoji and Yokoyama, Tomohiko},
+    booktitle={Proceedings of the 18th ACM Conference on Recommender Systems},
+    pages={209--218},
+    year={2024}
+  }
+  ```
 
 ## License
 This repository is licensed under the MIT License.
