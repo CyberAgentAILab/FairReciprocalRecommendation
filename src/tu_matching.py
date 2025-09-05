@@ -1,19 +1,20 @@
 import numpy as np
 from utils import to_deterministic_policy, to_stochastic_policy
 
-def tu_matching(
-        pref_left_to_right: np.ndarray,
-        pref_right_to_left: np.ndarray,
-        beta: float = 1.0,
-        maxit: int = 10000,
-        maxvaltol: float = 1e-9,
-        maxsteptol: float = 1e-9,
-        output: bool = True
-) -> tuple[np.ndarray]:
-    """Returns the TU matching policy computed via IPFP, in the form of a stochastic policy [Tomita et al. 2023].
 
-    Parameters:
-    -----------
+def tu_matching(
+    pref_left_to_right: np.ndarray,
+    pref_right_to_left: np.ndarray,
+    beta: float = 1.0,
+    maxit: int = 10000,
+    maxvaltol: float = 1e-9,
+    maxsteptol: float = 1e-9,
+    output: bool = True,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return the TU matching policy computed via IPFP, in the form of a stochastic policy [Tomita et al. 2023].
+
+    Parameters
+    ----------
     pref_left_to_right : np.ndarray
         The preference of left to right. Shape is (num_left, num_right).
     pref_right_to_left : np.ndarray
@@ -28,14 +29,16 @@ def tu_matching(
         Tolerance for the step difference in IPFP, by default 1e-9.
     output : bool, optional
         Whether to print the convergence message, by default True.
-    
-    Returns:
-    --------
-    tuple[np.ndarray]
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
         The stochastic policy for left and right. Shapes are (num_left, num_right, num_right) and (num_right, num_left, num_left).
 
-    References:
+    References
+    ----------
         Yoji Tomita, Riku Togashi, Yuriko Hashizume and Naoto Ohsaka. "Fast and Examination-agnostic Reciprocal Recommendation in Matching Markets," RecSys, 2023.
+
     """
     num_left, num_right = pref_left_to_right.shape
 
@@ -71,24 +74,24 @@ def tu_matching(
         # Update mu_c0, mu_0j, mu and check convergence
         mu_c0 = A * A
         mu_0j = B * B
-        mu = (K
-              * (np.tile(A.reshape(num_left, 1), reps=(1, num_right)))
-              * (np.tile(B.reshape(1, num_right), reps=(num_left, 1))))
+        mu = K * (np.tile(A.reshape(num_left, 1), reps=(1, num_right))) * (np.tile(B.reshape(1, num_right), reps=(num_left, 1)))
 
-        valdiff = np.max([
-            np.max(np.abs(np.ones(num_left) - mu.sum(axis=1) - mu_c0)),
-            np.max(np.abs(np.ones(num_right) - mu.sum(axis=0) - mu_0j))
-        ])
+        valdiff = np.max(
+            [
+                np.max(np.abs(np.ones(num_left) - mu.sum(axis=1) - mu_c0)),
+                np.max(np.abs(np.ones(num_right) - mu.sum(axis=0) - mu_0j)),
+            ],
+        )
 
         if update < maxsteptol and valdiff < maxvaltol:
             if output:
                 print(
-                    f"IPFP converged in {i+1} iterations. Update={update}, Valdiff={valdiff}."
+                    f"IPFP converged in {i + 1} iterations. Update={update}, Valdiff={valdiff}.",
                 )
             break
     else:
         raise RuntimeError("Not converged.")
-    
+
     tu_deterministic_policy_for_left = to_deterministic_policy(mu)
     tu_deterministic_policy_for_right = to_deterministic_policy(mu.T)
 
